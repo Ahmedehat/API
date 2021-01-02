@@ -1,5 +1,6 @@
 class ListsController < ApplicationController
 before_action :set_list , only: [:show , :update , :destroy]	
+before_action :authenticate_admin , only: [:create]
 	def index
 		lists = List.all
 		render json: lists

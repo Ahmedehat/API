@@ -6,4 +6,8 @@ Rails.application.routes.draw do
   		resources :comments
   	end
   end
+
+  get '/users', to: "users#index"
+  get '/user', to: "users#find"
+  put '/assign_admin', to: "users#assign_admin"
 end
