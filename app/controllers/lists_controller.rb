@@ -1,6 +1,7 @@
 class ListsController < ApplicationController
 before_action :set_list , only: [:show , :update , :destroy]	
 before_action :authenticate_admin , only: [:create]
+before_action :authenticate_creator , only: [:update , :destroy]
 	def index
 		lists = List.all
 		render json: lists
@@ -8,9 +9,12 @@ before_action :authenticate_admin , only: [:create]
 	def show
 		render json: @list
 	end
+
+
 	def create
 		list = List.new(list_params)
 		if list.save
+			list.update(creator: current_user.email)
 			render json: list
 		else
 			render json: list.errors	
