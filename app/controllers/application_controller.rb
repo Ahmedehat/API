@@ -15,4 +15,8 @@ class ApplicationController < ActionController::API
 			render json: "You are not authorized to do this action", status: :bad_request   
 		end
 	end
+
+	def authenticate_creator 
+		render json: "You didn't have access to do this action" if current_user.email != @list.creator
+	end
 end
