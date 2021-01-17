@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+	before_action :authenticate_user , only: [:authenticate_admin]
 
 
 #to set username 
@@ -17,6 +18,6 @@ class ApplicationController < ActionController::API
 	end
 
 	def authenticate_creator 
-		render json: "You didn't have access to do this action" if current_user.email != @list.creator
+		render json: "You didn't have access to do this action" if current_user != @list.creator
 	end
 end

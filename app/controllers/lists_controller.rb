@@ -13,8 +13,8 @@ before_action :authenticate_creator , only: [:update , :destroy]
 
 	def create
 		list = List.new(list_params)
+		list.creator = current_user
 		if list.save
-			list.update(creator: current_user.email)
 			render json: list
 		else
 			render json: list.errors	
@@ -39,4 +39,5 @@ private
 	def list_params
 		params.require(:list).permit(:title)
 	end
+
 end
