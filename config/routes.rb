@@ -10,4 +10,5 @@ Rails.application.routes.draw do
   get '/users', to: "users#index"
   get '/user', to: "users#find"
   put '/assign_admin', to: "users#assign_admin"
+  post '/lists_assign' , to: "lists#set_users_lists"
 end
