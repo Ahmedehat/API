@@ -15,4 +15,7 @@ class ApplicationController < ActionController::API
 	def authenticate_creator 
 		render json: "You Must Be The Creator" if current_user != @list.creator
 	end
+	def authenticate_ud_cards
+		render json: "You can't edit or del" unless  current_user == @list.creator or @card.creator
+	end
 end

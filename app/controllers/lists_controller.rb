@@ -78,3 +78,4 @@ private
 		params.require(:list).permit(:title)
 	end
 end
+

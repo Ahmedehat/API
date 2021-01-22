@@ -1,6 +1,8 @@
 class CardsController < ApplicationController
-before_action :set_card,  only: [:update , :destroy , :show ]
 before_action :set_list
+before_action :set_card,  only: [:update , :destroy , :show ]
+before_action :authenticate_admin , only: [:index, :show ,:create ]
+before_action :authenticate_ud_cards , only: [:update , :destroy]
 	def index
 		cards = @list.cards 	
 		render json: cards
@@ -10,6 +12,7 @@ before_action :set_list
 	end
 	def create
 		card = @list.cards.new(card_params)
+		card.creator = current_user
 		if card.save
 			render json: card
 		else
