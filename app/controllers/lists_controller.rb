@@ -1,13 +1,17 @@
 class ListsController < ApplicationController
 before_action :set_list , only: [:show , :update , :destroy]	
-before_action :authenticate_admin , only: [:create, :show ,:set_users_lists]
+before_action :authenticate_admin , only: [:create,:show ,:assign_members ,:unassign_members]
 before_action :authenticate_creator , only: [:update , :destroy]
 	def index
-		lists = List.all
-		render json: lists
+		if current_user.is_admin?
+			lists = List.all
+			render json: lists
+		else
+			render json: "refer to your admin"
+		end
 	end
 	def show
-		render json: @list
+			render json: @list
 	end
 	def create
 		list = List.new(list_params)
@@ -19,7 +23,7 @@ before_action :authenticate_creator , only: [:update , :destroy]
 		end
 	end
 	def update
-		if @list.update(list_params)
+		if @list.update(list_params)	
 			render json: list_params
 		else
 			render list.errors
@@ -29,17 +33,12 @@ before_action :authenticate_creator , only: [:update , :destroy]
 		@list.destroy
 		render json: @list
 	end
-
-	def set_users_lists
+	def assign_members
 		user_id = params[:users_lists][:user_id]
 		list_id = params[:users_lists][:list_id]
-
 		if user_id.present? and list_id.present?
-
 			user = User.find_by(id: user_id)
-
 			list = List.find_by(id: list_id)
-
 			if user.present? and list.present?
 				userslist = UsersList.create(user_id: user_id, list_id: list_id)
 				if userslist.save
@@ -47,6 +46,22 @@ before_action :authenticate_creator , only: [:update , :destroy]
 				else
 					render json: "dublicate data"
 				end
+			else
+				render json: "User/List not found"
+			end
+		else
+			render json: "invalid Entry"
+		end 
+	end
+	def unassign_members
+		user_id = params[:users_lists][:user_id]
+		list_id = params[:users_lists][:list_id]
+		if user_id.present? and list_id.present?
+			user = User.find_by(id: user_id)
+			list = List.find_by(id: list_id)
+			if user.present? and list.present?
+				UsersList.find_by(user_id: user_id, list_id: list_id).destroy
+					render json: "Your action done"
 			else
 				render json: "User/List not found"
 			end
@@ -63,4 +78,3 @@ private
 		params.require(:list).permit(:title)
 	end
 end
-
