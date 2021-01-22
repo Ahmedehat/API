@@ -5,11 +5,8 @@ class UsersController < ApplicationController
 
   def index
     users = User.all
-
     render json: users
   end
-
-
   def find
     if params[:email].present?
       user = User.find_by(email: params[:email])
